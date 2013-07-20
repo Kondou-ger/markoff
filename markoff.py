@@ -24,15 +24,16 @@ class markoff(object):
 	
 	def add(self, message):
 		splitted = message.split()
-		for i in range(0, len(splitted)):# for(i=0; i<=len(splitted); i++)
-			if i == 0:
-				self.addpair(splitted[i], splitted[i+1], True, False)
-			elif i == len(splitted)-2:
-				self.addpair(splitted[i], splitted[i+1], False, True)
-			elif i == len(splitted)-1:
-				pass
-			else:
-				self.addpair(splitted[i], splitted[i+1], False, False)
+		if len(splitted) > 1:
+			for i in range(0, len(splitted)):# for(i=0; i<=len(splitted); i++)
+				if i == 0:
+					self.addpair(splitted[i], splitted[i+1], True, False)
+				elif i == len(splitted)-2:
+					self.addpair(splitted[i], splitted[i+1], False, True)
+				elif i == len(splitted)-1:
+					pass
+				else:
+					self.addpair(splitted[i], splitted[i+1], False, False)
 	
 	def getfollow(self, first, isFirst=False):
 		t = [str(first), str(isFirst)]
@@ -49,26 +50,29 @@ class markoff(object):
 			message.append(firstword)
 			if secondword:
 				message.append(secondword)
+				isLast = "False"
 			else:
 				t = [str(firstword)]
-				self.cursor.execute("SELECT second FROM pairlist WHERE first = ?", t)
+				self.cursor.execute("SELECT second, isLast FROM pairlist WHERE first = ?", t)
 				second = self.cursor.fetchall()
-				message.append(choice(second))[0]
+				chosen = choice(second)
+				message.append(chosen[0])
+				isLast = chosen[1]
 		else:
 			t = [str(True)]
-			self.cursor.execute("SELECT first, second FROM pairlist WHERE isFirst = ?", t)
+			self.cursor.execute("SELECT first, second, isLast FROM pairlist WHERE isFirst = ?", t)
 			result = choice(self.cursor.fetchall())
 			message.append(result[0])
 			message.append(result[1])
+			isLast = result[2]
 		
 		counter = 0 #to prevent infinite loops TODO remove when finished
-		while True:
+		while isLast != "True":
 			t = [str(message[len(message)-1])]
 			self.cursor.execute("SELECT second, isLast FROM pairlist WHERE first = ?", t)
 			nextsecond = choice(self.cursor.fetchall())
 			message.append(nextsecond[0])
-			if nextsecond[1] == "True":
-				break
+			isLast = nextsecond[1]
 			if counter > 3000: # TODO remove when finished
 				print("Prevented infinite loop!")
 				break
