@@ -24,7 +24,9 @@ class markoff(object):
 	
 	def add(self, message):
 		splitted = message.split()
-		if len(splitted) > 1:
+		if len(splitted) == 2:
+			self.addpair(splitted[0], splitted[1], True, True)
+		elif len(splitted) > 2:
 			for i in range(0, len(splitted)):# for(i=0; i<=len(splitted); i++)
 				if i == 0:
 					self.addpair(splitted[i], splitted[i+1], True, False)
