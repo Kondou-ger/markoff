@@ -1,0 +1,32 @@
+body {
+	background-color: #bbb;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #333;
+}
+
+.page {
+	background-color: #fff;
+	padding: 30px;
+	border-radius: 5px;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+.login, h1, h2, .graph {
+	text-align: center;
+}
+
+#userinput {
+	margin: 0 30%;
+}
+
+#chatinput {
+	margin-bottom: 0;
+}
+
+#chatwindow {
+	height: 400px;
+	max-height: 400px;
+	overflow-y: scroll;
+}
